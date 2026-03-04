@@ -11,8 +11,8 @@ pipeline {
             steps {
                 echo "Cloning application code from GitHub..."
                 git branch: 'main',
-                url: 
-            }https://'github.com/yashjadhao123/yash-sudhir-jadhao.git'
+                    url: 'https://github.com/yashjadhao123/yash-sudhir-jadhao.git'
+            }
         }
 
         stage('Install Apache') {
@@ -49,7 +49,7 @@ pipeline {
             steps {
                 echo "Checking Apache status..."
                 sh '''
-                systemctl status httpd
+                sudo systemctl status httpd
                 '''
             }
         }

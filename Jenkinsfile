@@ -19,8 +19,7 @@ pipeline {
             steps {
                 echo "Installing Apache HTTPD..."
                 sh '''
-                sudo yum update -y
-                sudo yum install httpd -y
+                sudo yum install -y httpd
                 '''
             }
         }
@@ -39,19 +38,29 @@ pipeline {
             steps {
                 echo "Deploying static application..."
                 sh '''
-                sudo rm -rf /var/www/html/*
-                sudo cp -r * /var/www/html/
+                sudo rm -rf ${APP_DIR}/*
+                sudo cp -r . ${APP_DIR}/
+                sudo chown -R apache:apache ${APP_DIR}
                 '''
             }
         }
 
         stage('Verify Deployment') {
             steps {
-                echo "Checking Apache status..."
+                echo "Verifying Apache service..."
                 sh '''
-                sudo systemctl status httpd
+                sudo systemctl is-active httpd
                 '''
             }
+        }
+    }
+
+    post {
+        success {
+            echo "✅ Deployment successful! Application is live."
+        }
+        failure {
+            echo "❌ Deployment failed. Please check logs."
         }
     }
 }
